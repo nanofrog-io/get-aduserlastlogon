@@ -1,0 +1,10 @@
+Function Get-ADUserLastLogon {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [int32]$Days
+    )
+    Get-ADUser -Filter * -Properties LastLogonDate | Where-Object {($_.LastLogonDate -lt (Get-Date).AddDays(($Days)*-1)) -and ($_.LastLogonDate -ne $null)} | Sort-Object | Select-Object Name,LastLogonDate
+}
+
+Get-ADUserLastLogon
