@@ -4,7 +4,8 @@ Function Get-ADUserLastLogon {
         [Parameter(Mandatory)]
         [int32]$Days
     )
-    Get-ADUser -Filter * -Properties LastLogonDate | Where-Object {($_.LastLogonDate -lt (Get-Date).AddDays(($Days)*-1)) -and ($_.LastLogonDate -ne $null)} | Sort-Object | Select-Object Name,LastLogonDate
+    $Query = Get-ADUser -Filter * -Properties LastLogonDate | Where-Object {($_.LastLogonDate -lt (Get-Date).AddDays(($Days)*-1)) -and ($null -ne $_.LastLogonDate)} | Sort-Object | Select-Object Name,LastLogonDate
+    $Count = $Query.Count
+    $Query
+    Write-Output "`nThere are $Count users who have not logged in for $Days days."
 }
-
-Get-ADUserLastLogon
